@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+  make-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Create zip
+        run: |
+          cd ..
+          cp -a ${{ github.event.repository.name }} ${{ github.event.repository.name }}-${{ github.ref_name }}
+          zip -r ${{ github.event.repository.name }}-${{ github.ref_name }}
+          tar -cvzf ${{ github.event.repository.name }}-${{ github.ref_name }}.tar.gz ${{ github.event.repository.name }}-${{ github.ref_name }}
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ../${{ github.event.repository.name }}-${{ github.ref_name }}.zip
+            ../${{ github.event.repository.name }}-${{ github.ref_name }}.tar.gz
