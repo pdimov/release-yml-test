@@ -15,9 +15,13 @@ jobs:
           path: ${{ github.ref_name }}
           submodules: true
 
+      - name: Cleanup
+        shell: bash
+        run: |
+          find ${{ github.ref_name }} -name ".git" -prune -exec rm -rf {} +
+
       - name: Create archives
         run: |
-          rm -rf ${{ github.ref_name }}/.git
           tar -czf ${{ github.ref_name }}.tar.gz ${{ github.ref_name }}
           tar -cJf ${{ github.ref_name }}.tar.xz ${{ github.ref_name }}
 
@@ -38,10 +42,14 @@ jobs:
           path: ${{ github.ref_name }}
           submodules: true
 
+      - name: Cleanup
+        shell: bash
+        run: |
+          find ${{ github.ref_name }} -name ".git" -prune -exec rm -rf {} +
+
       - name: Create archives
         shell: cmd
         run: |
-          rd /s/q ${{ github.ref_name }}\.git
           7z a ${{ github.ref_name }}.zip ${{ github.ref_name }}
           7z a ${{ github.ref_name }}.7z ${{ github.ref_name }}
 
